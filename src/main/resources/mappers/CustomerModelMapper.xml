@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="com.chernogorov.repository.mapper.CustomerModelMapper">
+
+    <insert id="save" parameterType="CustomerModel"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="customerModel.id">
+        INSERT INTO customer(
+            id,
+            first_name,
+            last_name,
+            middle_name,
+            sex,
+            registred_address_id,
+            actual_address_id
+        ) VALUES (
+            #{customerModel.id},
+            #{customerModel.firstName},
+            #{customerModel.lastName},
+            #{customerModel.middleName},
+            #{customerModel.sex},
+            #{customerModel.registredAddressId},
+            #{customerModel.actualAddressId}
+        )
+         ON CONFLICT (id) DO UPDATE SET
+            first_name = #{customerModel.firstName},
+            last_name = #{customerModel.lastName},
+            middle_name = #{customerModel.middleName},
+            sex = #{customerModel.sex},
+            registred_address_id = #{customerModel.registredAddressId},
+            actual_address_id= #{customerModel.actualAddressId}
+    </insert>
+
+    <sql id="columns">
+        c.id,
+        c.first_name,
+        c.last_name,
+        c.middle_name,
+        c.sex,
+        c.registred_address_id,
+        c.actual_address_id
+    </sql>
+
+    <select id="findById" resultMap="customerResultMap">
+        SELECT
+           <include refid="columns"/>
+        FROM customer c
+        WHERE c.id = #{id}
+    </select>
+
+
+    <select id="findByFirstname" resultMap="customerResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM customer c
+        WHERE LOWER(c.first_name) LIKE LOWER(CONCAT(#{firstname},'%'))
+    </select>
+
+    <select id="findByLastname" resultMap="customerResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM customer c
+        WHERE LOWER(c.last_name) LIKE LOWER(CONCAT(#{lastname},'%'))
+    </select>
+
+    <select id="findByFirstnameOrLastname" resultMap="customerResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM customer c
+        WHERE LOWER(c.first_name) LIKE LOWER(CONCAT(#{firstname},'%'))
+            AND LOWER(c.last_name) LIKE LOWER(CONCAT(#{lastname},'%'))
+    </select>
+
+
+    <resultMap id="customerResultMap" type="com.chernogorov.model.CustomerModel">
+        <result property="id" column="id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="middleName" column="middle_name"/>
+        <result property="sex" column="sex"/>
+        <association property="registredAddress"
+                     column="registred_address_id"
+                     select="com.chernogorov.repository.mapper.AddressModelMapper.getById"
+                     fetchType="eager"/>
+        <association property="actualAddress"
+                     column="actual_address_id"
+                     select="com.chernogorov.repository.mapper.AddressModelMapper.getById"
+                     fetchType="eager"/>
+    </resultMap>
+
+</mapper>

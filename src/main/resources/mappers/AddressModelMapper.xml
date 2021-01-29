@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="com.chernogorov.repository.mapper.AddressModelMapper">
+
+
+    <insert id="save" parameterType="AddressModel"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="addressModel.id">
+       INSERT INTO address(
+            id,
+            country,
+            region,
+            city,
+            street,
+            house,
+            flat,
+            created,
+            modified
+        ) VALUES (
+            #{addressModel.id},
+            #{addressModel.country},
+            #{addressModel.region},
+            #{addressModel.city},
+            #{addressModel.street},
+            #{addressModel.house},
+            #{addressModel.flat},
+            #{addressModel.created},
+            #{addressModel.modified}
+        )
+
+        ON CONFLICT (id) DO UPDATE SET
+            country = #{addressModel.country},
+            region = #{addressModel.region},
+            city = #{addressModel.city},
+            street = #{addressModel.street},
+            house = #{addressModel.house},
+            flat= #{addressModel.flat},
+            created = #{addressModel.created},
+            modified = #{addressModel.modified}
+
+    </insert>
+
+<!--    <update id="update" parameterType="AddressModel">-->
+<!--      UPDATE address-->
+<!--        SET-->
+<!--          country = #{addressModel.country},-->
+<!--          region = #{addressModel.region},-->
+<!--          city = #{addressModel.city},-->
+<!--          street = #{addressModel.street},-->
+<!--          house = #{addressModel.house},-->
+<!--          flat = #{addressModel.flat},-->
+<!--          created = #{addressModel.created}-->
+<!--          modified = #{addressModel.modified}-->
+<!--        WHERE id = #{addressModel.id}-->
+<!--    </update>-->
+
+    <sql id="columns">
+        a.id,
+        a.country,
+        a.region,
+        a.city,
+        a.street,
+        a.house,
+        a.flat,
+        a.created,
+        a.modified
+    </sql>
+
+    <select id="getById" resultMap="addressResultMap">
+        SELECT
+           <include refid="columns"></include>
+        FROM address a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="addressResultMap">
+        SELECT
+        <include refid="columns"></include>
+        FROM address a
+    </select>
+
+    <resultMap id="addressResultMap" type="com.chernogorov.model.AddressModel">
+        <result property="id" column="id"/>
+        <result property="country" column="country"/>
+        <result property="region" column="region"/>
+        <result property="city" column="city"/>
+        <result property="street" column="street"/>
+        <result property="house" column="house"/>
+        <result property="flat" column="flat"/>
+        <result property="created" column="created"/>
+        <result property="modified" column="modified"/>
+    </resultMap>
+
+
+</mapper>
