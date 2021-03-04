@@ -1,5 +1,6 @@
 package com.chernogorov.converter;
 
+import com.chernogorov.model.AddressModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,9 +26,10 @@ class CustomerDtoConverterTest {
         CustomerDto dto = genDto();
         CustomerModel model = converter.convert(dto);
 
-//        AddressModel actualAddressModel = new AddressModel();
-//        Mockito.when(addressDtoConverter.convert(dto.getActualAddress())).thenReturn(actualAddressModel);
+        AddressModel actualAddressModel = new AddressModel();
+    //    Mockito.when(addressDtoConverter.convert(dto.getActualAddress())).thenReturn(actualAddressModel);
 //        assertEquals(actualAddressModel, model.getActualAddress());
+
 
         assertNotNull(model);
         assertEquals(dto.getFirstName(), model.getFirstName());
