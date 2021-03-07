@@ -1,44 +1,58 @@
 package com.chernogorov.converter;
 
+import com.chernogorov.dto.AddressDto;
+import com.chernogorov.dto.CustomerDto;
 import com.chernogorov.model.AddressModel;
+import com.chernogorov.model.CustomerModel;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.chernogorov.dto.AddressDto;
-import com.chernogorov.model.CustomerModel;
-import com.chernogorov.dto.CustomerDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 class CustomerDtoConverterTest {
 
     @InjectMocks
     private CustomerDtoConverter converter;
 
-    @Mock
+    @Spy
     private AddressDtoConverter addressDtoConverter;
+
+
+    @Before
+    public void setUp() {
+
+    }
 
     @Test
     void checkConvert() {
-        CustomerDto dto = genDto();
-        CustomerModel model = converter.convert(dto);
+
+        CustomerDto customerDto = getCustomerDto();
+        CustomerModel customerModel = converter.convert(customerDto);
 
         AddressModel actualAddressModel = new AddressModel();
-    //    Mockito.when(addressDtoConverter.convert(dto.getActualAddress())).thenReturn(actualAddressModel);
-//        assertEquals(actualAddressModel, model.getActualAddress());
+        Mockito.when(addressDtoConverter.convert(customerDto.getActualAddress())).thenReturn(actualAddressModel);
+        assertNotNull(addressDtoConverter.convert(customerDto.getActualAddress()));
+        assertEquals(actualAddressModel, customerModel.getActualAddress());
+        assertEquals(actualAddressModel, addressDtoConverter.convert(customerDto.getActualAddress()));
 
-
-        assertNotNull(model);
-        assertEquals(dto.getFirstName(), model.getFirstName());
-        assertEquals(dto.getLastName(), model.getLastName());
-        assertEquals(dto.getMiddleName(), model.getMiddleName());
-        assertEquals(dto.getSex(), model.getSex());
+        assertNotNull(customerModel);
+        assertEquals(customerDto.getFirstName(), customerModel.getFirstName());
+        assertEquals(customerDto.getLastName(), customerModel.getLastName());
+        assertEquals(customerDto.getMiddleName(), customerModel.getMiddleName());
+        assertEquals(customerDto.getSex(), customerModel.getSex());
     }
 
-    private CustomerDto genDto() {
+    private CustomerDto getCustomerDto() {
         CustomerDto dto = new CustomerDto();
         dto.setFirstName("firstName");
         dto.setLastName("lastName");
@@ -50,7 +64,5 @@ class CustomerDtoConverterTest {
         return dto;
 
     }
-
-
 
 }
