@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 public class PersistConfig {
 
     @Bean
-   @ConfigurationProperties(prefix = "spring.datasource")
+    @ConfigurationProperties(prefix = "spring.datasource")
     DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
     }
