@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
+//@SpringBootTest
 class CustomerDtoConverterTest {
 
     @InjectMocks
